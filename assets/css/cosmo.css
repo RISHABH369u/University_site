@@ -1,0 +1,68 @@
+:root{
+--background:222 47% 5%;
+--foreground:210 40% 98%;
+--card:222 47% 8%;
+--primary:186 100% 50%;
+--secondary:270 80% 65%;
+--muted:217 33% 17%;
+--border:217 33% 17%;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+font-family:Inter,sans-serif;
+background:hsl(var(--background));
+color:hsl(var(--foreground));
+overflow-x:hidden
+}
+
+#cosmic-canvas{
+position:fixed;
+inset:0;
+z-index:-2
+}
+
+.nebula-overlay{
+position:fixed;
+inset:0;
+z-index:-1;
+background:radial-gradient(circle,hsla(var(--primary),.15),transparent)
+}
+
+.navbar{
+position:sticky;
+top:0;
+background:hsla(var(--card),.8);
+backdrop-filter:blur(20px);
+border-bottom:1px solid hsla(var(--border),.5)
+}
+
+.main-container{
+display:grid;
+grid-template-columns:1fr;
+gap:24px;
+padding:24px
+}
+
+@media(min-width:1024px){
+.main-container{grid-template-columns:280px 1fr 320px}
+}
+
+.glass-card,.glass-card-glow{
+background:hsla(var(--card),.6);
+backdrop-filter:blur(20px);
+border-radius:20px;
+padding:20px
+}
+
+.feed{display:flex;flex-direction:column;gap:24px}
+
+.cosmic-btn{
+background:linear-gradient(135deg,hsl(var(--primary)),hsl(var(--secondary)));
+border:none;
+padding:10px 24px;
+border-radius:12px;
+cursor:pointer;
+color:black
+}

@@ -1,0 +1,152 @@
+/* hero.css - hero styles and feature cards */
+:root{
+  --hero-overlay: rgba(6,9,20,.55);
+  --cta-radius: 28px;
+  --primary: #ff7350;
+}
+
+/* HERO container */
+.final-hero{
+position: relative;
+overflow: hidden;
+color:#fff;
+
+/* 🔒 FIXED HEIGHT */
+min-height: 88vh;        /* desktop */
+height: 88vh;
+
+padding: 0;              /* remove padding-based height */
+
+--bg-url: url('https://ptsnsuniversity.ac.in/slides/10.jpg');
+background-image:
+  linear-gradient(var(--hero-overlay), var(--hero-overlay)),
+  var(--bg-url);
+
+background-size: cover;  /* image crop hogi, size change nahi */
+background-position: center center;
+background-repeat: no-repeat;
+
+transition: background-image .6s ease;
+}
+
+.final-hero h5{
+margin-top: 50px;   /* adjust: 30px – 60px as per taste */
+}
+
+.final-hero h1{
+  /* clamp with max 5.4rem as requested */
+  font-size: clamp(2.2rem, 6vw, 5.4rem);
+  font-weight:700;
+  line-height:1.02;
+  margin-bottom:.75rem;
+  text-shadow: 0 6px 20px rgba(0,0,0,.5);
+}
+.final-hero .lead{ color: rgba(255,255,255,.92); font-size:1.05rem; max-width: 58ch; }
+
+/* Buttons: only hover changes color & uplift */
+.btn-primary-cta{
+  background: linear-gradient(135deg,var(--primary),#ff4b8b);
+  border: none; color:#fff; padding: .9rem 1.6rem; border-radius: var(--cta-radius); font-weight:700;
+  box-shadow: 0 8px 30px rgba(255,115,80,.18); transition: transform .18s ease, box-shadow .18s ease, filter .18s;
+  display:inline-flex; align-items:center; gap:.6rem;
+}
+.btn-primary-cta:hover{
+  transform: translateY(-6px);
+  filter: brightness(1.06);
+  box-shadow: 0 16px 44px rgba(255,115,80,.22);
+}
+
+.btn-outline-cta{
+  border:2px solid rgba(255,255,255,.9); background: transparent; color:#fff; border-radius: var(--cta-radius);
+  padding:.7rem 1.3rem; font-weight:600; transition: background .18s, color .18s, transform .18s, box-shadow .18s;
+}
+.btn-outline-cta:hover{
+  transform: translateY(-5px);
+  background: rgba(255,255,255,.06);
+  box-shadow: 0 12px 30px rgba(0,0,0,.25);
+}
+
+.btn-light{
+  background: rgba(255,255,255,.92);
+  color:#141b22;
+  border-radius: var(--cta-radius);
+  padding:.7rem 1.2rem;
+  font-weight:600;
+  transition: transform .18s, box-shadow .18s;
+}
+.btn-light:hover{ transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,.18); }
+
+/* IMAGE NAV BUTTONS (left/right) */
+.hero-nav{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  z-index: 40;
+  border: none;
+  background: rgba(0,0,0,.35);
+  color: #fff;
+  width:54px;
+  height:54px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  backdrop-filter: blur(4px);
+  transition: background .15s ease, transform .12s ease;
+  cursor:pointer;
+}
+.hero-nav:hover{ background: rgba(0,0,0,.55); transform: translateY(-50%) scale(1.06); }
+.hero-prev{ left: 18px; }
+.hero-next{ right: 18px; }
+
+/* bottom feature cards container (transparent cards) */
+.feature-cards-bottom{
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  width: min(1100px, 92%);
+  display:flex;
+  gap:1rem;
+  align-items:stretch;
+  justify-content:center;
+  z-index: 30;
+  pointer-events: auto;
+}
+
+.feature-card{
+  flex: 1 1 calc(33.333% - .66rem);
+  min-width: 220px;
+  height: 120px;
+  background: transparent;               /* transparent by default */
+  border-radius:12px;
+  overflow:hidden;
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:flex-start;
+  padding: 0; position:relative;
+  box-shadow: 0 6px 18px rgba(0,0,0,.25);
+  transition: transform .22s cubic-bezier(.2,.9,.3,1), box-shadow .22s, background .28s, opacity .18s;
+  border: 1px solid rgba(255,255,255,.06);
+}
+
+.feature-card .card-content{
+  z-index:5; padding: 1rem 1.1rem; color:rgba(255,255,255,.95); display:flex; gap:1rem; align-items:center;
+  transition: color .18s ease;
+}
+.feature-card h4{ font-size:1.05rem; margin:0; font-weight:800; letter-spacing:.2px; }
+.feature-card i{ width:48px; height:48px; display:flex; align-items:center; justify-content:center; border-radius:10px; background:rgba(255,255,255,.06); transition: background .18s, color .18s; }
+
+/* hover: change to gradient & uplift (JS sets background using data-grad) */
+.feature-card.hovered{
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 22px 60px rgba(0,0,0,.45);
+  border: 1px solid rgba(255,255,255,.14);
+  color: #fff;
+}
+.feature-card.hovered .card-content{ color:#fff; }
+.feature-card.hovered i{ background: rgba(255,255,255,.12); color: #fff; }
+
+@media(max-width:992px){
+  .feature-cards-bottom{ bottom: 12px; gap:.6rem; flex-direction:column; width: 92%; }
+  .feature-card{ height:110px; min-width:unset; }
+  .final-hero{ padding: 3rem 0; background-position:center top; }
+  .hero-nav{ display:none; } /* hide nav on small screens (touch swipe preferred) */
+}

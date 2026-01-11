@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CosmoSphere | Academic Network for Scientific Discourse</title>
+  <meta name="description" content="A moderated academic social network for cosmology, quantum theory, and fundamental sciences. Join faculty-led scholarly discussions.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ================= CSS VARIABLES ================= */
+    :root {
+      --background: 222 47% 5%;
+      --foreground: 210 40% 98%;
+      --card: 222 47% 8%;
+      --card-foreground: 210 40% 98%;
+      --primary: 186 100% 50%;
+      --primary-foreground: 222 47% 5%;
+      --secondary: 270 80% 65%;
+      --secondary-foreground: 210 40% 98%;
+      --muted: 217 33% 17%;
+      --muted-foreground: 215 20% 65%;
+      --accent: 186 100% 50%;
+      --border: 217 33% 17%;
+      --ring: 186 100% 50%;
+      
+      /* Cosmic Colors */
+      --nebula-pink: 320 80% 60%;
+      --cosmic-purple: 270 80% 50%;
+      --star-yellow: 45 100% 70%;
+      --deep-space: 222 47% 3%;
+    }
+
+    /* ================= RESET ================= */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* ================= BASE STYLES ================= */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: hsl(var(--background));
+      color: hsl(var(--foreground));
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ================= TYPOGRAPHY ================= */
+    .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* ================= COSMIC BACKGROUND ================= */
+    #cosmic-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    .nebula-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background: 
+        radial-gradient(ellipse 80% 50% at 20% 40%, hsla(var(--cosmic-purple), 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 40% at 80% 60%, hsla(var(--nebula-pink), 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse 100% 80% at 50% 100%, hsla(var(--primary), 0.08) 0%, transparent 40%);
+    }
+
+    /* ================= ORBITAL DECORATIONS ================= */
+    .orbital-container {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .orbital-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid hsla(var(--primary), 0.1);
+    }
+
+    .orbital-ring-1 {
+      width: 600px;
+      height: 600px;
+      top: -200px;
+      right: -200px;
+      animation: orbit 60s linear infinite;
+    }
+
+    .orbital-ring-2 {
+      width: 800px;
+      height: 800px;
+      bottom: -300px;
+      left: -300px;
+      animation: orbit 80s linear infinite reverse;
+    }
+
+    .orbital-ring-3 {
+      width: 400px;
+      height: 400px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: orbit 40s linear infinite;
+    }
+
+    .floating-particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: hsl(var(--primary));
+      border-radius: 50%;
+      box-shadow: 0 0 10px hsl(var(--primary));
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .floating-particle:nth-child(2) {
+      width: 3px;
+      height: 3px;
+      top: 20%;
+      left: 80%;
+      animation-delay: -2s;
+      background: hsl(var(--secondary));
+      box-shadow: 0 0 10px hsl(var(--secondary));
+    }
+
+    .floating-particle:nth-child(3) {
+      width: 5px;
+      height: 5px;
+      top: 70%;
+      left: 15%;
+      animation-delay: -4s;
+    }
+
+    .floating-particle:nth-child(4) {
+      width: 2px;
+      height: 2px;
+      top: 40%;
+      left: 90%;
+      animation-delay: -1s;
+      background: hsl(var(--star-yellow));
+      box-shadow: 0 0 8px hsl(var(--star-yellow));
+    }
+
+    /* ================= ANIMATIONS ================= */
+    @keyframes orbit {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) translateX(0); opacity: 0.6; }
+      25% { transform: translateY(-20px) translateX(10px); opacity: 1; }
+      50% { transform: translateY(-10px) translateX(-5px); opacity: 0.8; }
+      75% { transform: translateY(-30px) translateX(15px); opacity: 1; }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
+    }
+
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    .animate-fade-up {
+      animation: fade-up 0.6s ease-out forwards;
+    }
+
+    .animation-delay-200 { animation-delay: 200ms; }
+    .animation-delay-400 { animation-delay: 400ms; }
+    .animation-delay-600 { animation-delay: 600ms; }
+    .animation-delay-1000 { animation-delay: 1000ms; }
+
+    /* ================= GLASS CARD ================= */
+    .glass-card {
+      background: hsla(var(--card), 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid hsla(var(--border), 0.5);
+      border-radius: 20px;
+    }
+
+    .glass-card-glow {
+      background: hsla(var(--card), 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid hsla(var(--primary), 0.2);
+      border-radius: 20px;
+      box-shadow: 
+        0 0 30px -10px hsla(var(--primary), 0.3),
+        inset 0 1px 0 hsla(255, 255, 255, 0.05);
+    }
+
+    /* ================= COSMIC TEXT ================= */
+    .cosmic-text {
+      background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .glow-text {
+      text-shadow: 0 0 30px hsla(var(--primary), 0.5);
+    }
+
+    /* ================= NAVBAR ================= */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: hsla(var(--card), 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid hsla(var(--border), 0.5);
+    }
+
+    .navbar-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon-wrapper {
+      position: relative;
+    }
+
+    .logo-glow {
+      position: absolute;
+      inset: 0;
+      background: hsla(var(--primary), 0.3);
+      filter: blur(15px);
+      border-radius: 50%;
+    }
+
+    .logo-icon {
+      position: relative;
+      width: 32px;
+      height: 32px;
+      color: hsl(var(--primary));
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+
+    .logo-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .search-container {
+      flex: 1;
+      max-width: 512px;
+      margin: 0 32px;
+      position: relative;
+      display: none;
+    }
+
+    @media (min-width: 768px) {
+      .search-container {
+        display: block;
+      }
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: hsl(var(--muted-foreground));
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 10px 16px 10px 40px;
+      background: hsla(var(--muted), 0.5);
+      border: 1px solid hsla(var(--border), 0.5);
+      border-radius: 12px;
+      color: hsl(var(--foreground));
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .search-input::placeholder {
+      color: hsl(var(--muted-foreground));
+    }
+
+    .search-input:focus {
+      border-color: hsla(var(--primary), 0.5);
+      box-shadow: 0 0 20px hsla(var(--primary), 0.2);
+    }
+
+    .nav-icons {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-btn {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .nav-btn:hover {
+      background: hsla(var(--primary), 0.1);
+    }
+
+    .nav-btn svg {
+      width: 20px;
+      height: 20px;
+      color: hsl(var(--muted-foreground));
+      transition: color 0.3s ease;
+    }
+
+    .nav-btn:hover svg {
+      color: hsl(var(--primary));
+    }
+
+    .notification-dot {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 8px;
+      height: 8px;
+      background: hsl(var(--primary));
+      border-radius: 50%;
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    /* ================= MAIN LAYOUT ================= */
+    .main-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    @media (min-width: 1024px) {
+      .main-container {
+        grid-template-columns: 280px 1fr 320px;
+      }
+    }
+
+    /* ================= PROFILE SIDEBAR ================= */
+    .sidebar-left {
+      display: none;
+    }
+
+    @media (min-width: 1024px) {
+      .sidebar-left {
+        display: block;
+      }
+    }
+
+    .profile-card {
+      padding: 24px;
+    }
+
+    .profile-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .profile-avatar-wrapper {
+      position: relative;
+    }
+
+    .profile-avatar-glow {
+      position: absolute;
+      inset: 0;
+      background: hsla(var(--primary), 0.2);
+      filter: blur(15px);
+      border-radius: 50%;
+    }
+
+    .profile-avatar {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 2px solid hsla(var(--primary), 0.5);
+      object-fit: cover;
+    }
+
+    .profile-status {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 20px;
+      height: 20px;
+      background: #22c55e;
+      border-radius: 50%;
+      border: 3px solid hsl(var(--card));
+    }
+
+    .profile-name {
+      margin-top: 16px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .profile-title {
+      font-size: 14px;
+      color: hsl(var(--primary));
+    }
+
+    .profile-location {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 14px;
+      color: hsl(var(--muted-foreground));
+      margin-top: 4px;
+    }
+
+    .profile-location svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .profile-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 16px 0;
+      margin-top: 16px;
+      border-top: 1px solid hsla(var(--border), 0.5);
+      border-bottom: 1px solid hsla(var(--border), 0.5);
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-item:nth-child(2) {
+      border-left: 1px solid hsla(var(--border), 0.5);
+      border-right: 1px solid hsla(var(--border), 0.5);
+    }
+
+    .stat-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: hsl(var(--primary));
+    }
+
+    .stat-value.secondary {
+      color: hsl(var(--secondary));
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: hsl(var(--muted-foreground));
+    }
+
+    .profile-section {
+      margin-top: 20px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: hsl(var(--muted-foreground));
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+
+    .section-title svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .research-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .research-tag {
+      padding: 6px 12px;
+      font-size: 12px;
+      background: hsla(var(--primary), 0.1);
+      color: hsl(var(--primary));
+      border: 1px solid hsla(var(--primary), 0.2);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .research-tag:hover {
+      background: hsla(var(--primary), 0.2);
+    }
+
+    .achievement-card {
+      padding: 12px;
+      background: linear-gradient(135deg, hsla(var(--primary), 0.1), hsla(var(--secondary), 0.1));
+      border: 1px solid hsla(var(--primary), 0.2);
+      border-radius: 12px;
+    }
+
+    .achievement-title {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .achievement-subtitle {
+      font-size: 12px;
+      color: hsl(var(--muted-foreground));
+      margin-top: 4px;
+    }
+
+    /* ================= FEED ================= */
+    .feed {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* CREATE POST */
+    .create-post {
+      padding: 20px;
+    }
+
+    .create-post-inner {
+      display: flex;
+      gap: 16px;
+    }
+
+    .create-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid hsla(var(--primary), 0.3);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .create-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .create-textarea {
+      width: 100%;
+      min-height: 80px;
+      padding: 12px 16px;
+      background: hsla(var(--muted), 0.5);
+      border: 1px solid hsla(var(--border), 0.5);
+      border-radius: 16px;
+      color: hsl(var(--foreground));
+      font-family: inherit;
+      font-size: 14px;
+      resize: none;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .create-textarea::placeholder {
+      color: hsl(var(--muted-foreground));
+    }
+
+    .create-textarea:focus {
+      border-color: hsla(var(--primary), 0.5);
+      box-shadow: 0 0 20px hsla(var(--primary), 0.1);
+    }
+
+    .create-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .create-tools {
+      display: flex;
+      gap: 8px;
+    }
+
+    .tool-btn {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .tool-btn svg {
+      width: 18px;
+      height: 18px;
+      color: hsl(var(--muted-foreground));
+    }
+
+    .tool-btn:hover {
+      background: hsla(var(--primary), 0.1);
+    }
+
+    .tool-btn:hover svg {
+      color: hsl(var(--primary));
+    }
+
+    .cosmic-btn {
+      padding: 10px 24px;
+      background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+      border: none;
+      border-radius: 12px;
+      color: hsl(var(--primary-foreground));
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px hsla(var(--primary), 0.3);
+    }
+
+    .cosmic-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px hsla(var(--primary), 0.4);
+    }
+
+    /* POST */
+    .post {
+      padding: 20px;
+      opacity: 0;
+    }
+
+    .post.visible {
+      animation: fade-up 0.6s ease-out forwards;
+    }
+
+    .post-header {
+      display: flex;
+      gap: 16px;
+    }
+
+    .post-avatar-wrapper {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .post-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid hsla(var(--primary), 0.3);
+      object-fit: cover;
+    }
+
+    .verified-badge {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 18px;
+      height: 18px;
+      background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .verified-badge svg {
+      width: 10px;
+      height: 10px;
+      color: hsl(var(--primary-foreground));
+    }
+
+    .post-author-info {
+      flex: 1;
+    }
+
+    .post-author-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .post-author-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+    }
+
+    .faculty-badge {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      background: hsla(var(--primary), 0.1);
+      border: 1px solid hsla(var(--primary), 0.2);
+      border-radius: 20px;
+      font-size: 11px;
+      color: hsl(var(--primary));
+    }
+
+    .faculty-badge svg {
+      width: 10px;
+      height: 10px;
+    }
+
+    .post-author-title {
+      font-size: 14px;
+      color: hsl(var(--primary));
+    }
+
+    .post-timestamp {
+      font-size: 12px;
+      color: hsl(var(--muted-foreground));
+    }
+
+    .post-content {
+      margin-top: 16px;
+      line-height: 1.8;
+      color: hsla(var(--foreground), 0.9);
+    }
+
+    .post-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid hsla(var(--border), 0.5);
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: transparent;
+      border: none;
+      border-radius: 10px;
+      color: hsl(var(--muted-foreground));
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .action-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .action-btn:hover {
+      background: hsla(var(--primary), 0.1);
+      color: hsl(var(--primary));
+    }
+
+    .action-btn.appreciated {
+      color: hsl(var(--star-yellow));
+    }
+
+    /* COMMENTS */
+    .comments-section {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid hsla(var(--border), 0.3);
+    }
+
+    .comment {
+      display: flex;
+      gap: 12px;
+      padding: 12px;
+      background: hsla(var(--muted), 0.3);
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+
+    .comment-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .comment-content {
+      flex: 1;
+    }
+
+    .comment-author {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .comment-text {
+      font-size: 14px;
+      color: hsla(var(--foreground), 0.8);
+      margin-top: 4px;
+    }
+
+    .comment.pending {
+      opacity: 0.6;
+      border-left: 3px solid hsl(var(--star-yellow));
+    }
+
+    .pending-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      background: hsla(var(--star-yellow), 0.1);
+      border: 1px solid hsla(var(--star-yellow), 0.3);
+      border-radius: 20px;
+      font-size: 10px;
+      color: hsl(var(--star-yellow));
+      margin-left: 8px;
+    }
+
+    .pending-badge svg {
+      width: 10px;
+      height: 10px;
+    }
+
+    .add-comment {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .comment-input {
+      flex: 1;
+      padding: 10px 16px;
+      background: hsla(var(--muted), 0.5);
+      border: 1px solid hsla(var(--border), 0.5);
+      border-radius: 12px;
+      color: hsl(var(--foreground));
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .comment-input::placeholder {
+      color: hsl(var(--muted-foreground));
+    }
+
+    .comment-input:focus {
+      border-color: hsla(var(--primary), 0.5);
+    }
+
+    .comment-submit {
+      padding: 10px 20px;
+      background: hsla(var(--primary), 0.2);
+      border: 1px solid hsla(var(--primary), 0.3);
+      border-radius: 12px;
+      color: hsl(var(--primary));
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .comment-submit:hover {
+      background: hsla(var(--primary), 0.3);
+    }
+
+    /* ================= TRENDING SIDEBAR ================= */
+    .sidebar-right {
+      display: none;
+    }
+
+    @media (min-width: 1024px) {
+      .sidebar-right {
+        display: block;
+      }
+    }
+
+    .trending-card {
+      padding: 24px;
+    }
+
+    .trending-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .trending-header svg {
+      width: 20px;
+      height: 20px;
+      color: hsl(var(--primary));
+    }
+
+    .trending-header h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+    }
+
+    .topic-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .topic-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      background: hsla(var(--muted), 0.3);
+      border: 1px solid transparent;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .topic-item:hover {
+      background: hsla(var(--primary), 0.1);
+      border-color: hsla(var(--primary), 0.3);
+    }
+
+    .topic-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .topic-hash {
+      width: 16px;
+      height: 16px;
+      color: hsl(var(--primary));
+    }
+
+    .topic-name {
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .topic-item:hover .topic-name {
+      color: hsl(var(--primary));
+    }
+
+    .topic-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .topic-sparkle {
+      width: 12px;
+      height: 12px;
+      color: hsl(var(--star-yellow));
+    }
+
+    .topic-count {
+      font-size: 12px;
+      color: hsl(var(--muted-foreground));
+    }
+
+    .integrity-notice {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid hsla(var(--border), 0.5);
+    }
+
+    .integrity-card {
+      display: flex;
+      gap: 12px;
+      padding: 16px;
+      background: linear-gradient(135deg, hsla(var(--primary), 0.05), hsla(var(--secondary), 0.05));
+      border: 1px solid hsla(var(--primary), 0.2);
+      border-radius: 12px;
+    }
+
+    .integrity-card svg {
+      width: 20px;
+      height: 20px;
+      color: hsl(var(--primary));
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .integrity-title {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .integrity-text {
+      font-size: 12px;
+      color: hsl(var(--muted-foreground));
+      margin-top: 4px;
+    }
+
+    .quick-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .quick-stat {
+      padding: 16px;
+      background: hsla(var(--muted), 0.3);
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .quick-stat-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: hsl(var(--primary));
+    }
+
+    .quick-stat-value.secondary {
+      color: hsl(var(--secondary));
+    }
+
+    .quick-stat-label {
+      font-size: 12px;
+      color: hsl(var(--muted-foreground));
+      margin-top: 4px;
+    }
+
+    /* ================= RESPONSIVE ================= */
+    @media (max-width: 1023px) {
+      .main-container {
+        padding: 16px;
+      }
+    }
+
+    /* ================= VIDEO BACKGROUND ADDED (no previous rules changed) ================= */
+    .bg-video {
+      position: fixed;
+      inset: 0;
+      z-index: -5; /* behind nebula-overlay (-1) and canvas (-2) */
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .bg-video iframe {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      /* keep 16:9 cover behavior */
+      width: 177.77778vh; /* 100vh * (16/9) */
+      height: 100vh;
+      min-width: 100vw;
+      min-height: 56.25vw; /* 100vw * (9/16) */
+      transform: translate(-50%, -50%);
+      border: 0;
+    }
+
+    .bg-video::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.5));
+      pointer-events: none;
+    }
+
+  </style>
+</head>
+<body>
+  <!-- Cosmic Background Canvas -->
+  <canvas id="cosmic-canvas"></canvas>
+
+  <!-- VIDEO BACKGROUND (added) -->
+  <div class="bg-video" aria-hidden="true">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/2QSukL7dl5o?autoplay=1&mute=1&controls=0&rel=0&loop=1&playlist=2QSukL7dl5o&modestbranding=1&playsinline=1" title="YouTube video player" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+  
+  <!-- Nebula Overlay -->
+  <div class="nebula-overlay"></div>
+  
+  <!-- Orbital Decorations -->
+  <div class="orbital-container">
+    <div class="orbital-ring orbital-ring-1"></div>
+    <div class="orbital-ring orbital-ring-2"></div>
+    <div class="orbital-ring orbital-ring-3"></div>
+    <div class="floating-particle" style="top: 10%; left: 20%;"></div>
+    <div class="floating-particle"></div>
+    <div class="floating-particle"></div>
+    <div class="floating-particle"></div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <div class="logo">
+        <div class="logo-icon-wrapper">
+          <div class="logo-glow"></div>
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 2a10 10 0 0 1 0 20"/>
+            <path d="M12 2a10 10 0 0 0 0 20"/>
+            <path d="M2 12h20"/>
+          </svg>
+        </div>
+        <span class="logo-text cosmic-text glow-text">CosmoSphere</span>
+      </div>
+      
+      <div class="search-container">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.3-4.3"/>
+        </svg>
+        <input type="text" class="search-input" placeholder="Search professors, theories, research...">
+      </div>
+      
+      <div class="nav-icons">
+        <button class="nav-btn">
+          <span class="notification-dot"></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+          </svg>
+        </button>
+        <button class="nav-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect width="20" height="16" x="2" y="4" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+        </button>
+        <button class="nav-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="8" r="5"/>
+            <path d="M20 21a8 8 0 0 0-16 0"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="main-container">
+    <!-- Left Sidebar - Profile -->
+    <aside class="sidebar-left">
+      <div class="glass-card-glow profile-card animate-fade-up">
+        <div class="profile-header">
+          <div class="profile-avatar-wrapper">
+            <div class="profile-avatar-glow"></div>
+            <img src="https://i.pravatar.cc/100?img=11" alt="Dr. R. Sharma" class="profile-avatar">
+            <div class="profile-status"></div>
+          </div>
+          <h4 class="profile-name font-display">Dr. R. Sharma</h4>
+          <p class="profile-title">Professor • Cosmology</p>
+          <p class="profile-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            PTSNS University
+          </p>
+        </div>
+        
+        <div class="profile-stats">
+          <div class="stat-item">
+            <p class="stat-value font-display">42</p>
+            <p class="stat-label">Papers</p>
+          </div>
+          <div class="stat-item">
+            <p class="stat-value secondary font-display">1.2k</p>
+            <p class="stat-label">Citations</p>
+          </div>
+          <div class="stat-item">
+            <p class="stat-value font-display">89</p>
+            <p class="stat-label">Followers</p>
+          </div>
+        </div>
+        
+        <div class="profile-section">
+          <h5 class="section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+            </svg>
+            Research Areas
+          </h5>
+          <div class="research-tags">
+            <span class="research-tag">Dark Matter</span>
+            <span class="research-tag">Quantum Gravity</span>
+            <span class="research-tag">Cosmology</span>
+            <span class="research-tag">String Theory</span>
+          </div>
+        </div>
+        
+        <div class="profile-section">
+          <h5 class="section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="8" r="6"/>
+              <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+            </svg>
+            Recent Achievement
+          </h5>
+          <div class="achievement-card">
+            <p class="achievement-title">Top Contributor</p>
+            <p class="achievement-subtitle">Quantum Physics • 2024</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Feed -->
+    <section class="feed">
+      <!-- Create Post -->
+      <div class="glass-card-glow create-post animate-fade-up animation-delay-200">
+        <div class="create-post-inner">
+          <img src="https://i.pravatar.cc/48?img=11" alt="Your avatar" class="create-avatar">
+          <div class="create-content">
+            <textarea class="create-textarea" placeholder="Share a scholarly insight or research finding..." rows="3"></textarea>
+            <div class="create-actions">
+              <div class="create-tools">
+                <button class="tool-btn" title="Add image">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+                    <circle cx="9" cy="9" r="2"/>
+                    <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+                  </svg>
+                </button>
+                <button class="tool-btn" title="Add link">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                  </svg>
+                </button>
+                <button class="tool-btn" title="Add equation">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"/>
+                    <path d="M8.5 8.5v.01"/>
+                    <path d="M16 15.5v.01"/>
+                    <path d="M12 12v.01"/>
+                    <path d="M11 17v.01"/>
+                    <path d="M7 14v.01"/>
+                  </svg>
+                </button>
+              </div>
+              <button class="cosmic-btn" onclick="handlePost()">Publish</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Posts -->
+      <article class="glass-card post visible animation-delay-400" id="post-1">
+        <div class="post-header">
+          <div class="post-avatar-wrapper">
+            <img src="https://i.pravatar.cc/48?img=32" alt="Dr. Manish Taram" class="post-avatar">
+            <div class="verified-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20,6 9,17 4,12"/>
+              </svg>
+            </div>
+          </div>
+          <div class="post-author-info">
+            <div class="post-author-row">
+              <span class="post-author-name font-display">Dr. Manish Taram</span>
+              <span class="faculty-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>
+                </svg>
+                Faculty
+              </span>
+            </div>
+            <p class="post-author-title">Professor • Quantum Physics</p>
+            <p class="post-timestamp">2 hours ago</p>
+          </div>
+        </div>
+        
+        <div class="post-content">
+          Quantum entanglement suggests spacetime connectivity beyond classical geometry. 
+          This may support ER = EPR as a deeper principle of reality. The implications 
+          for our understanding of black hole information paradox are profound.
+        </div>
+        
+        <div class="post-actions">
+          <button class="action-btn" onclick="toggleAppreciate(this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            <span>24 Appreciations</span>
+          </button>
+          <button class="action-btn" onclick="toggleComments('post-1')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>
+            </svg>
+            <span>3 Comments</span>
+          </button>
+          <button class="action-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+              <polyline points="16 6 12 2 8 6"/>
+              <line x1="12" x2="12" y1="2" y2="15"/>
+            </svg>
+            <span>Cite</span>
+          </button>
+        </div>
+        
+        <div class="comments-section" id="comments-post-1">
+          <div class="comment">
+            <img src="https://i.pravatar.cc/32?img=15" alt="Student A" class="comment-avatar">
+            <div class="comment-content">
+              <span class="comment-author">Dr. Sarah Chen</span>
+              <p class="comment-text">This connects beautifully with AdS/CFT correspondence ideas. Have you considered the holographic implications?</p>
+            </div>
+          </div>
+          <div class="comment pending">
+            <img src="https://i.pravatar.cc/32?img=20" alt="Student B" class="comment-avatar">
+            <div class="comment-content">
+              <span class="comment-author">
+                Alex Kumar
+                <span class="pending-badge">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  Awaiting Approval
+                </span>
+              </span>
+              <p class="comment-text">Can this be experimentally verified with current technology?</p>
+            </div>
+          </div>
+          <div class="add-comment">
+            <input type="text" class="comment-input" placeholder="Write an academic comment...">
+            <button class="comment-submit" onclick="submitComment()">Send</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="glass-card post visible animation-delay-600" id="post-2">
+        <div class="post-header">
+          <div class="post-avatar-wrapper">
+            <img src="https://i.pravatar.cc/48?img=44" alt="Dr. Elena Rodriguez" class="post-avatar">
+            <div class="verified-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20,6 9,17 4,12"/>
+              </svg>
+            </div>
+          </div>
+          <div class="post-author-info">
+            <div class="post-author-row">
+              <span class="post-author-name font-display">Dr. Elena Rodriguez</span>
+              <span class="faculty-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>
+                </svg>
+                Faculty
+              </span>
+            </div>
+            <p class="post-author-title">Professor • Dark Matter Research</p>
+            <p class="post-timestamp">5 hours ago</p>
+          </div>
+        </div>
+        
+        <div class="post-content">
+          New observations from the James Webb Space Telescope are challenging our models 
+          of early galaxy formation. The presence of mature galaxies at z > 10 suggests 
+          either modified dark matter physics or alternative formation mechanisms.
+        </div>
+        
+        <div class="post-actions">
+          <button class="action-btn" onclick="toggleAppreciate(this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            <span>56 Appreciations</span>
+          </button>
+          <button class="action-btn" onclick="toggleComments('post-2')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>
+            </svg>
+            <span>8 Comments</span>
+          </button>
+          <button class="action-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+              <polyline points="16 6 12 2 8 6"/>
+              <line x1="12" x2="12" y1="2" y2="15"/>
+            </svg>
+            <span>Cite</span>
+          </button>
+        </div>
+        
+        <div class="comments-section" id="comments-post-2" style="display: none;">
+          <div class="add-comment">
+            <input type="text" class="comment-input" placeholder="Write an academic comment...">
+            <button class="comment-submit" onclick="submitComment()">Send</button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Right Sidebar - Trending -->
+    <aside class="sidebar-right">
+      <div class="glass-card-glow trending-card animate-fade-up animation-delay-1000">
+        <div class="trending-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+            <polyline points="16 7 22 7 22 13"/>
+          </svg>
+          <h3 class="font-display">Trending Topics</h3>
+        </div>
+        
+        <div class="topic-list">
+          <div class="topic-item">
+            <div class="topic-left">
+              <svg class="topic-hash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="4" x2="20" y1="9" y2="9"/>
+                <line x1="4" x2="20" y1="15" y2="15"/>
+                <line x1="10" x2="8" y1="3" y2="21"/>
+                <line x1="16" x2="14" y1="3" y2="21"/>
+              </svg>
+              <span class="topic-name">Cosmology</span>
+            </div>
+            <div class="topic-right">
+              <svg class="topic-sparkle" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7-6.3-4.6L5.7 21l2.3-7-6-4.6h7.6z"/>
+              </svg>
+              <span class="topic-count">2.4k posts</span>
+            </div>
+          </div>
+          <div class="topic-item">
+            <div class="topic-left">
+              <svg class="topic-hash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="4" x2="20" y1="9" y2="9"/>
+                <line x1="4" x2="20" y1="15" y2="15"/>
+                <line x1="10" x2="8" y1="3" y2="21"/>
+                <line x1="16" x2="14" y1="3" y2="21"/>
+              </svg>
+              <span class="topic-name">QuantumGravity</span>
+            </div>
+            <div class="topic-right">
+              <svg class="topic-sparkle" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7-6.3-4.6L5.7 21l2.3-7-6-4.6h7.6z"/>
+              </svg>
+              <span class="topic-count">1.8k posts</span>
+            </div>
+          </div>
+          <div class="topic-item">
+            <div class="topic-left">
+              <svg class="topic-hash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="4" x2="20" y1="9" y2="9"/>
+                <line x1="4" x2="20" y1="15" y2="15"/>
+                <line x1="10" x2="8" y1="3" y2="21"/>
+                <line x1="16" x2="14" y1="3" y2="21"/>
+              </svg>
+              <span class="topic-name">Relativity</span>
+            </div>
+            <div class="topic-right">
+              <span class="topic-count">1.5k posts</span>
+            </div>
+          </div>
+          <div class="topic-item">
+            <div class="topic-left">
+              <svg class="topic-hash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="4" x2="20" y1="9" y2="9"/>
+                <line x1="4" x2="20" y1="15" y2="15"/>
+                <line x1="10" x2="8" y1="3" y2="21"/>
+                <line x1="16" x2="14" y1="3" y2="21"/>
+              </svg>
+              <span class="topic-name">DarkMatter</span>
+            </div>
+            <div class="topic-right">
+              <svg class="topic-sparkle" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7-6.3-4.6L5.7 21l2.3-7-6-4.6h7.6z"/>
+              </svg>
+              <span class="topic-count">1.2k posts</span>
+            </div>
+          </div>
+          <div class="topic-item">
+            <div class="topic-left">
+              <svg class="topic-hash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="4" x2="20" y1="9" y2="9"/>
+                <line x1="4" x2="20" y1="15" y2="15"/>
+                <line x1="10" x2="8" y1="3" y2="21"/>
+                <line x1="16" x2="14" y1="3" y2="21"/>
+              </svg>
+              <span class="topic-name">StringTheory</span>
+            </div>
+            <div class="topic-right">
+              <span class="topic-count">892 posts</span>
+            </div>
+          </div>
+          <div class="topic-item">
+            <div class="topic-left">
+              <svg class="topic-hash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="4" x2="20" y1="9" y2="9"/>
+                <line x1="4" x2="20" y1="15" y2="15"/>
+                <line x1="10" x2="8" y1="3" y2="21"/>
+                <line x1="16" x2="14" y1="3" y2="21"/>
+              </svg>
+              <span class="topic-name">BlackHoles</span>
+            </div>
+            <div class="topic-right">
+              <span class="topic-count">756 posts</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="integrity-notice">
+          <div class="integrity-card">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>
+            </svg>
+            <div>
+              <p class="integrity-title">Academic Integrity</p>
+              <p class="integrity-text">All discussions are moderated by faculty to ensure scholarly discourse and accuracy.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="quick-stats">
+          <div class="quick-stat">
+            <p class="quick-stat-value font-display">12.4k</p>
+            <p class="quick-stat-label">Active Scholars</p>
+          </div>
+          <div class="quick-stat">
+            <p class="quick-stat-value secondary font-display">847</p>
+            <p class="quick-stat-label">Today's Posts</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    // ================= COSMIC BACKGROUND =================
+    const canvas = document.getElementById('cosmic-canvas');
+    const ctx = canvas.getContext('2d');
+    
+    let width, height;
+    let stars = [];
+    let particles = [];
+    let mouseX = 0;
+    let mouseY = 0;
+    
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      initStars();
+      initParticles();
+    }
+    
+    function initStars() {
+      stars = [];
+      const numStars = Math.floor((width * height) / 8000);
+      for (let i = 0; i < numStars; i++) {
+        stars.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          size: Math.random() * 1.5 + 0.5,
+          opacity: Math.random(),
+          twinkleSpeed: Math.random() * 0.02 + 0.005
+        });
+      }
+    }
+    
+    function initParticles() {
+      particles = [];
+      const numParticles = Math.floor((width * height) / 25000);
+      for (let i = 0; i < numParticles; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          size: Math.random() * 3 + 1,
+          speedX: (Math.random() - 0.5) * 0.3,
+          speedY: (Math.random() - 0.5) * 0.3,
+          hue: Math.random() > 0.5 ? 186 : 270 // Primary or secondary color
+        });
+      }
+    }
+    
+    function drawStars() {
+      stars.forEach(star => {
+        star.opacity += star.twinkleSpeed;
+        if (star.opacity > 1 || star.opacity < 0.3) {
+          star.twinkleSpeed *= -1;
+        }
+        
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+        ctx.fill();
+      });
+    }
+    
+    function drawParticles() {
+      particles.forEach((p, i) => {
+        // Move particles
+        p.x += p.speedX;
+        p.y += p.speedY;
+        
+        // Mouse interaction
+        const dx = mouseX - p.x;
+        const dy = mouseY - p.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 150) {
+          p.x -= dx * 0.01;
+          p.y -= dy * 0.01;
+        }
+        
+        // Wrap around
+        if (p.x < 0) p.x = width;
+        if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height;
+        if (p.y > height) p.y = 0;
+        
+        // Draw particle
+        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 2);
+        gradient.addColorStop(0, `hsla(${p.hue}, 100%, 60%, 0.8)`);
+        gradient.addColorStop(1, `hsla(${p.hue}, 100%, 50%, 0)`);
+        
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * 2, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+        
+        // Draw connections
+        particles.slice(i + 1).forEach(p2 => {
+          const dx = p.x - p2.x;
+          const dy = p.y - p2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `hsla(186, 100%, 50%, ${(1 - dist / 120) * 0.15})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        });
+      });
+    }
+    
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      drawStars();
+      drawParticles();
+      requestAnimationFrame(animate);
+    }
+    
+    // Event listeners
+    window.addEventListener('resize', resize);
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+    
+    // Initialize
+    resize();
+    animate();
+    
+    // ================= INTERACTIVE FUNCTIONS =================
+    function handlePost() {
+      const textarea = document.querySelector('.create-textarea');
+      if (textarea.value.trim()) {
+        alert('Your scholarly insight has been published!');
+        textarea.value = '';
+      } else {
+        alert('Please write something before publishing.');
+      }
+    }
+    
+    function toggleAppreciate(btn) {
+      btn.classList.toggle('appreciated');
+      const span = btn.querySelector('span');
+      const currentCount = parseInt(span.textContent);
+      if (btn.classList.contains('appreciated')) {
+        span.textContent = (currentCount + 1) + ' Appreciations';
+        btn.querySelector('svg').setAttribute('fill', 'currentColor');
+      } else {
+        span.textContent = (currentCount - 1) + ' Appreciations';
+        btn.querySelector('svg').setAttribute('fill', 'none');
+      }
+    }
+    
+    function toggleComments(postId) {
+      const comments = document.getElementById('comments-' + postId);
+      if (comments.style.display === 'none') {
+        comments.style.display = 'block';
+      } else {
+        comments.style.display = 'none';
+      }
+    }
+    
+    function submitComment() {
+      alert('Your comment has been submitted for faculty approval.');
+    }
+    
+    // Animate posts on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('.post').forEach(post => {
+      observer.observe(post);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+/* blog.css - blog cards and post styles */
+:root{ --accent:#ff6f4d; --card-bg:#fff; --muted:#8b96a3; --shadow:0 10px 30px rgba(16,24,40,0.06); }
+#blog .eyebrow{ color:var(--accent); font-weight:600; margin-bottom:6px; }
+#blog h2{ font-size:36px; margin-bottom:28px; font-weight:700; }
+
+/* card */
+.post-card{ border-radius:10px; overflow:hidden; background:var(--card-bg); box-shadow:var(--shadow); display:flex; flex-direction:column; height:100%; }
+.post-media{ position:relative; overflow:hidden; border-bottom:1px solid rgba(16,24,40,0.04); }
+.post-media img{ width:100%; height:220px; object-fit:cover; display:block; transition:transform .5s ease; }
+.post-card:hover .post-media img{ transform:scale(1.03); }
+
+/* date badge */
+.date-badge{
+  position:absolute;
+  left:18px; top:18px;
+  background:var(--accent); color:#fff;
+  font-size:13px; padding:8px 12px; border-radius:6px;
+  display:inline-flex; gap:8px; align-items:center;
+  box-shadow:0 6px 18px rgba(16,24,40,0.12);
+}
+.date-badge svg{ fill:rgba(255,255,255,0.95); opacity:0.95; }
+
+/* body */
+.post-body{ padding:22px 24px 26px; display:flex; flex-direction:column; gap:12px; }
+.post-meta{ color:var(--muted); font-size:13px; display:flex; gap:14px; align-items:center; }
+.post-title{ font-size:20px; margin:6px 0 0; font-weight:700; color:#1f2933; }
+.post-excerpt{ color:#64707a; line-height:1.6; margin:8px 0 0; flex:1; }
+
+/* footer */
+.post-footer{ margin-top:10px; display:flex; align-items:center; justify-content:flex-start; }
+.post-footer .read-more{ color:var(--accent); font-weight:600; text-decoration:none; font-size:14px; }
+
+@media (max-width:768px){
+  .post-media img{ height:180px; }
+  #blog h2{ font-size:28px; }
+}

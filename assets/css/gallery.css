@@ -1,0 +1,7 @@
+/* gallery.css - gallery & lightbox */
+#gallery .gallery-grid img{ cursor:pointer; transition: transform .3s ease; }
+#gallery .gallery-grid img:hover{ transform: scale(1.03); }
+
+/* Image Lightbox Modal */
+.modal.bg-transparent .modal-body{ background:transparent; }
+#lightboxImg{ max-height:80vh; width:auto; }

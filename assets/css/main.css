@@ -1,0 +1,86 @@
+/* RESET */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+/* VARIABLES */
+:root{
+  --primary:#ff7350;
+  --dark:#0b1720;
+  --muted:#6e6e6e;
+}
+
+/* BODY */
+body{
+  font-family:'Jost',sans-serif;
+  color:var(--dark);
+}
+
+/* TOPBAR */
+.topbar{
+  background:linear-gradient(90deg,#0693e3,#9b51e0);
+  color:white;
+  padding:10px 0;
+  font-size:14px;
+}
+
+/* HERO */
+.hero{
+  height:85vh;
+  display:flex;
+  align-items:center;
+  background:
+    linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),
+    url('https://ptsnsuniversity.ac.in/slides/10.jpg');
+  background-size:cover;
+  background-position:center;
+  color:white;
+}
+
+.hero h1{
+  font-size:clamp(2.5rem,5vw,4.5rem);
+  font-weight:800;
+}
+
+.hero p{
+  max-width:600px;
+  margin:15px 0 25px;
+}
+
+/* ABOUT */
+.about{
+  padding:80px 0;
+  background:#f7fbff;
+}
+
+.about h2{
+  font-weight:800;
+  margin-bottom:10px;
+}
+
+/* COURSES */
+.courses{
+  padding:80px 0;
+}
+
+.course-card{
+  background:#fff;
+  padding:25px;
+  border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,.08);
+  transition:.3s;
+}
+
+.course-card:hover{
+  transform:translateY(-8px);
+}
+
+/* FOOTER */
+footer{
+  background:#00173c;
+  color:white;
+  padding:25px 0;
+  margin-top:60px;
+}

@@ -702,9 +702,105 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--accent);
         }
+
+
+        /* ===================== ADDED: BACKGROUND ENHANCEMENTS =====================
+           - canvas starfield with twinkle + shooting-stars
+           - subtle animated nebula gradient overlay
+           - all added safely at the end so original styles stay intact
+        ========================================================================== */
+
+        .bg-enhancements {
+            position: fixed;
+            inset: 0;
+            z-index: -3; /* behind hero and shapes (hero-content uses z-index:10) */
+            pointer-events: none;
+            overflow: hidden;
+            will-change: transform;
+            mix-blend-mode: normal;
+        }
+
+        /* canvas covers whole viewport */
+        #bgCanvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            transform: translateZ(0);
+        }
+
+        /* animated nebula gradient overlay (soft color shifts) */
+        .nebula-layer {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(30% 30% at 10% 20%, rgba(255,77,42,0.08), transparent 15%),
+                radial-gradient(35% 35% at 80% 25%, rgba(100, 60, 200, 0.06), transparent 20%),
+                radial-gradient(40% 40% at 50% 80%, rgba(45,200,255,0.04), transparent 25%);
+            mix-blend-mode: screen;
+            opacity: 0.9;
+            animation: nebulaShift 30s linear infinite;
+            filter: blur(36px) saturate(1.1);
+        }
+
+        @keyframes nebulaShift {
+            0% { transform: translate3d(0,0,0) scale(1); opacity: 0.9; filter: blur(36px) saturate(1.05); }
+            50% { transform: translate3d(6%, -3%, 0) scale(1.02); opacity: 1; filter: blur(40px) saturate(1.15); }
+            100% { transform: translate3d(0,0,0) scale(1); opacity: 0.9; filter: blur(36px) saturate(1.05); }
+        }
+
+        /* subtle vignette */
+        .vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(60% 60% at 50% 45%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 70%);
+            pointer-events: none;
+            mix-blend-mode: multiply;
+        }
+
+        /* overlay stars sparkle using CSS for tiny ones (extra depth) */
+        .sparkles {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background-image: radial-gradient(circle at 10% 20%, rgba(255,255,255,0.12) 0px, transparent 2px),
+                              radial-gradient(circle at 70% 30%, rgba(255,255,255,0.08) 0px, transparent 2px),
+                              radial-gradient(circle at 40% 60%, rgba(255,255,255,0.06) 0px, transparent 2px);
+            background-repeat: no-repeat;
+            opacity: 0.6;
+            mix-blend-mode: screen;
+            animation: sparklesFade 8s ease-in-out infinite;
+        }
+
+        @keyframes sparklesFade {
+            0% { opacity: 0.25; transform: translateY(0); }
+            50% { opacity: 0.8; transform: translateY(-6px); }
+            100% { opacity: 0.25; transform: translateY(0); }
+        }
+
+        /* optional subtle color wash when user hovers hero */
+        .hero:hover ~ .bg-enhancements .nebula-layer {
+            animation-play-state: paused;
+            filter: blur(30px) saturate(1.25);
+        }
+
+        /* small performance hint for mobile - reduce star density via class toggle in JS */
+        @media (max-width: 600px) {
+            .bg-enhancements { opacity: 0.85; }
+        }
+
     </style>
 </head>
 <body>
+    <!-- ===== ADDED BACKGROUND ENHANCEMENTS (kept separate, doesn't remove anything) ===== -->
+    <div class="bg-enhancements" aria-hidden="true">
+        <canvas id="bgCanvas"></canvas>
+        <div class="nebula-layer"></div>
+        <div class="sparkles"></div>
+        <div class="vignette"></div>
+    </div>
+
     <!-- Hero Section -->
     <section class="hero" id="hero">
         <div class="floating-shapes">
@@ -720,7 +816,7 @@
 
         <div class="hero-content">
             <h1 class="hero-title">
-                <span class="accent">Chrono</span>Gallery
+                <span class="accent">PTSNS University </span>Gallery
             </h1>
             <p class="hero-subtitle">
                 Journey through our university's cherished moments
@@ -799,6 +895,7 @@
     <script>
         // ============================================
         // EVENT DATA
+        // (unchanged original dataset)
         // ============================================
         const eventsData = [
             {
@@ -1186,7 +1283,155 @@
         // ============================================
         document.addEventListener('DOMContentLoaded', () => {
             renderTimeline();
+            initBackground(); // initialize added background animation
         });
+
+        /* ============================================
+           ADDED: Canvas starfield & shooting-stars
+           - lightweight, optimized for desktop/mobile
+           - auto reduce density on small screens
+        ============================================ */
+        function initBackground() {
+            const canvas = document.getElementById('bgCanvas');
+            const ctx = canvas.getContext('2d');
+            let w = canvas.width = innerWidth;
+            let h = canvas.height = innerHeight;
+            let deviceRatio = Math.min(window.devicePixelRatio || 1, 2);
+
+            const isMobile = window.matchMedia('(max-width: 600px)').matches;
+            const starCount = isMobile ? 80 : 220; // reduce on mobile
+            const stars = [];
+            const shootingStars = [];
+
+            function resizeCanvas() {
+                w = canvas.width = innerWidth * deviceRatio;
+                h = canvas.height = innerHeight * deviceRatio;
+                canvas.style.width = innerWidth + 'px';
+                canvas.style.height = innerHeight + 'px';
+                ctx.scale(deviceRatio, deviceRatio);
+            }
+
+            window.addEventListener('resize', () => {
+                deviceRatio = Math.min(window.devicePixelRatio || 1, 2);
+                resizeCanvas();
+            });
+
+            function initStars() {
+                stars.length = 0;
+                for (let i = 0; i < starCount; i++) {
+                    stars.push({
+                        x: Math.random() * innerWidth,
+                        y: Math.random() * innerHeight,
+                        r: Math.random() * 1.5 + 0.3,
+                        alpha: Math.random() * 0.9 + 0.1,
+                        twinkle: Math.random() * 0.02 + 0.005,
+                        hue: Math.random() > 0.7 ? 200 : 40 // mild color variation
+                    });
+                }
+            }
+
+            function spawnShootingStar() {
+                // Random chance but spaced out
+                if (Math.random() < 0.02) {
+                    shootingStars.push({
+                        x: Math.random() * innerWidth * 0.8 + innerWidth * 0.1,
+                        y: Math.random() * innerHeight * 0.3 + 20,
+                        len: Math.random() * 200 + 120,
+                        speed: Math.random() * 6 + 6,
+                        angle: Math.random() * 0.6 - 0.3,
+                        life: 0,
+                        ttl: Math.random() * 90 + 60
+                    });
+                }
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, innerWidth, innerHeight);
+
+                // faint color wash to give depth (subtle)
+                const g = ctx.createLinearGradient(0, 0, innerWidth, innerHeight);
+                g.addColorStop(0, 'rgba(10,12,20,0.12)');
+                g.addColorStop(0.5, 'rgba(30,15,40,0.06)');
+                g.addColorStop(1, 'rgba(5,10,20,0.12)');
+                ctx.fillStyle = g;
+                ctx.fillRect(0, 0, innerWidth, innerHeight);
+
+                // draw stars
+                for (let s of stars) {
+                    s.alpha += s.twinkle;
+                    if (s.alpha > 1 || s.alpha < 0.05) s.twinkle *= -1;
+
+                    ctx.beginPath();
+                    const gradient = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 4);
+                    gradient.addColorStop(0, `rgba(255,255,255,${s.alpha})`);
+                    gradient.addColorStop(0.6, `hsla(${s.hue}, 80%, 60%, ${s.alpha * 0.4})`);
+                    gradient.addColorStop(1, 'rgba(255,255,255,0)');
+                    ctx.fillStyle = gradient;
+                    ctx.arc(s.x, s.y, s.r * 2.2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // draw shooting stars
+                for (let i = shootingStars.length - 1; i >= 0; i--) {
+                    const st = shootingStars[i];
+                    st.x += Math.cos(st.angle) * st.speed;
+                    st.y += Math.sin(st.angle) * st.speed + 1;
+                    st.life++;
+
+                    const gradient2 = ctx.createLinearGradient(st.x, st.y, st.x - st.len * Math.cos(st.angle), st.y - st.len * Math.sin(st.angle));
+                    gradient2.addColorStop(0, 'rgba(255,255,255,0.95)');
+                    gradient2.addColorStop(0.6, 'rgba(255,200,160,0.6)');
+                    gradient2.addColorStop(1, 'rgba(255,200,160,0)');
+
+                    ctx.strokeStyle = gradient2;
+                    ctx.lineWidth = Math.max(1, Math.min(3, st.speed * 0.3));
+                    ctx.beginPath();
+                    ctx.moveTo(st.x, st.y);
+                    ctx.lineTo(st.x - st.len * Math.cos(st.angle), st.y - st.len * Math.sin(st.angle));
+                    ctx.stroke();
+
+                    // little head glow
+                    ctx.beginPath();
+                    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+                    ctx.arc(st.x, st.y, 2.4, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    if (st.life > st.ttl) shootingStars.splice(i, 1);
+                }
+
+                // occasionally spawn shooting star
+                if (Math.random() < 0.015) spawnShootingStar();
+
+                requestAnimationFrame(draw);
+            }
+
+            resizeCanvas();
+            initStars();
+            draw();
+
+            // reduce workload when tab not visible
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    // stop animations by not requesting frames - we'll keep canvas static
+                } else {
+                    // nothing needed — draw loop continues
+                }
+            });
+
+            // subtle parallax link: move background slightly with mouse for depth
+            let mouseX = innerWidth / 2, mouseY = innerHeight / 2;
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                const layer = document.querySelector('.nebula-layer');
+                if (layer) {
+                    const tx = (mouseX - innerWidth / 2) * 0.02;
+                    const ty = (mouseY - innerHeight / 2) * 0.02;
+                    layer.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
+                }
+            });
+        }
+
     </script>
 </body>
 </html>

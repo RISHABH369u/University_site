@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>PTSNS University Gallery - Journey Through Time</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
+
     <style>
         /* ============================================
            ORIGINAL CSS (kept) + targeted fixes
@@ -26,8 +26,8 @@
             --border:rgba(255,255,255,0.1);
             --font-display:'Playfair Display', serif;
             --font-body:'Inter', sans-serif;
-            --track-baseline: 150; /* LOWERED baseline to push track down */
-            --train-offset: 18;   /* tweak to make train sit on the track (px) */
+            --track-baseline: 150; /* LOWERED baseline to push track down (kept variable but track removed) */
+            --train-offset: 18;   /* (kept variable but train removed) */
         }
 
         html{ scroll-behavior:smooth; }
@@ -86,28 +86,6 @@
         /* Timeline */
         .timeline-section{ position:relative; height:300vh; }
         .timeline-sticky{ position:sticky; top:0; height:100vh; overflow:hidden; }
-
-        /* Track (moved down more) */
-        .track-container{ position:absolute; top:66%; left:0; transform:translateY(-50%); height:360px; pointer-events:none; z-index:5; will-change:width; }
-        .track-path{ fill:none; stroke-linecap:round; stroke-dasharray:10000; stroke-dashoffset:10000; transition:stroke-dashoffset .12s ease-out; }
-        .track-glow{ stroke:url(#trackGlow); stroke-width:8; filter:blur(2px); opacity:.95; }
-        .track-main{ stroke:url(#trackGradient); stroke-width:4; opacity:1; }
-
-        /* Train */
-        .train-container{ position:absolute; top:50%; z-index:30; pointer-events:none; transition:transform .12s linear; will-change:transform; }
-        .train-glow{ position:absolute; inset:-20px; background:radial-gradient(circle, rgba(6,182,212,0.4) 0%, transparent 70%); border-radius:50%; z-index:-1; }
-        .train-svg{ height:80px; width:auto; transform-origin:center center; transform:rotate(0deg); /* force 0deg */ filter:drop-shadow(0 0 20px rgba(168,85,247,0.4)) drop-shadow(0 0 30px rgba(6,182,212,0.5)); }
-
-        /* Steam */
-        .steam-container{ position:absolute; top:-60px; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; }
-        .steam-particle{ position:absolute; border-radius:50%; background:radial-gradient(circle, rgba(167,139,250,0.4) 0%, transparent 70%); animation:steam-rise 1.5s ease-out infinite; }
-        .steam-particle:nth-child(1){ width:20px;height:20px; animation-delay:0s; }
-        .steam-particle:nth-child(2){ width:30px;height:30px; animation-delay:.15s; }
-        .steam-particle:nth-child(3){ width:40px;height:40px; animation-delay:.3s; }
-        .steam-particle:nth-child(4){ width:50px;height:50px; animation-delay:.45s; }
-        .steam-particle:nth-child(5){ width:60px;height:60px; animation-delay:.6s; }
-        .steam-particle:nth-child(6){ width:70px;height:70px; animation-delay:.75s; }
-        @keyframes steam-rise{ 0%{ transform:translateY(0) translateX(0) scale(.3); opacity:.6; } 100%{ transform:translateY(-80px) translateX(30px) scale(1.5); opacity:0; } }
 
         /* Horizontal content (pure horizontal transform, no mouse parallax overrides) */
         .horizontal-content{ position:absolute; top:0; left:0; height:100%; display:flex; align-items:center; transition:transform .12s linear; will-change:transform; }
@@ -286,49 +264,7 @@
     <!-- Timeline Section -->
     <section class="timeline-section" id="timelineSection">
         <div class="timeline-sticky">
-            <!-- Track SVG -->
-            <svg class="track-container" id="trackSvg" width="5000" height="360">
-                <defs>
-                    <linearGradient id="trackGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#06b6d4" />
-                        <stop offset="50%" stop-color="#a855f7" />
-                        <stop offset="100%" stop-color="#ec4899" />
-                    </linearGradient>
-                    <linearGradient id="trackGlow" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.3" />
-                        <stop offset="50%" stop-color="#a855f7" stop-opacity="0.3" />
-                        <stop offset="100%" stop-color="#ec4899" stop-opacity="0.3" />
-                    </linearGradient>
-                </defs>
-                <path id="trackGlowPath" class="track-path track-glow" />
-                <path id="trackMainPath" class="track-path track-main" />
-            </svg>
-
-            <!-- Train 
-            <div class="train-container" id="trainContainer" aria-hidden="true">
-                <div class="steam-container">
-                    <div class="steam-particle"></div>
-                    <div class="steam-particle"></div>
-                    <div class="steam-particle"></div>
-                    <div class="steam-particle"></div>
-                    <div class="steam-particle"></div>
-                    <div class="steam-particle"></div>
-                </div>
-                <div class="train-glow"></div>
-                <svg class="train-svg" viewBox="0 0 18 109" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2.955 1.772C3.439 0.694 4.51 0 5.692 0h6.616c1.182 0 2.254 0.694 2.737 1.772l1.641 3.658C17.552 7.361 18 9.417 18 11.533v82.967c0 4.42-1.875 8.531-3.694 12.485-0.493 1.073-1.565 1.765-2.746 1.765H6.44c-1.18 0-2.253-0.692-2.747-1.764C1.865 103.018 0 98.959 0 94.5V11.565c0-2.116 0.448-4.172 1.314-6.103l1.641-3.69z" fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.7)"/>
-                    <path d="M1.875 102s3 2.625 7.125 2.625S16.125 102 16.125 102" stroke="white"/>
-                    <ellipse cx="9" cy="33.75" rx="2.25" ry="1.5" stroke="white"/>
-                    <ellipse cx="9" cy="59.25" rx="2.25" ry="1.5" stroke="white"/>
-                    <ellipse cx="9" cy="15.75" rx="2.25" ry="1.5" stroke="white"/>
-                    <ellipse cx="9" cy="44.25" rx="2.25" ry="1.5" stroke="white"/>
-                    <ellipse cx="9" cy="69.75" rx="2.25" ry="1.5" stroke="white"/>
-                    <ellipse cx="9" cy="84" rx="2.25" ry="1.5" stroke="white"/>
-                    <path opacity="0.5" d="M13.5 0.686V88.798" stroke="white" stroke-width="0.75"/>
-                    <path opacity="0.5" d="M4.5 0.686V88.798" stroke="white" stroke-width="0.75"/>
-                    <path d="M14.266 98.342l0.576-4.8c0.07-0.58-0.547-1.08-1.119-0.964-0.952 0.194-2.48 0.394-4.723 0.394s-3.77-0.2-4.723-0.394c-0.572-0.116-1.188 0.384-1.119 0.964l0.576 4.8c0.01 0.09 0.03 0.18 0.07 0.26 0.227 0.447 1.278 1.943 5.196 1.943s4.969-1.495 5.196-1.942c0.041-0.081 0.06-0.17 0.07-0.261z" fill="white"/>
-                </svg>
-            </div>  -->
+            <!-- Track & Train removed as requested -->
 
             <!-- Horizontal Content -->
             <div class="horizontal-content" id="horizontalContent">
@@ -345,7 +281,7 @@
     </section>
 
     <!-- end banner -->
-    <div id="endBanner"></div>
+    <div id="endBanner">More memories coming soon...</div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -412,10 +348,6 @@
         const eventsContainer = document.getElementById('eventsContainer');
         const horizontalContent = document.getElementById('horizontalContent');
         const timelineSection = document.getElementById('timelineSection');
-        const trackSvg = document.getElementById('trackSvg');
-        const trackGlowPath = document.getElementById('trackGlowPath');
-        const trackMainPath = document.getElementById('trackMainPath');
-        const trainContainer = document.getElementById('trainContainer');
         const lightbox = document.getElementById('lightbox');
         const lightboxImage = document.getElementById('lightboxImage');
         const lightboxTitle = document.getElementById('lightboxTitle');
@@ -447,23 +379,6 @@
                     st.style.transform = `translateY(${sc * p * 0.02}px)`;
                 });
             });
-        }
-
-        // ============================================
-        // WAVY PATH GENERATOR (lower baseline + richer curves)
-        // ============================================
-        function generateWavyPath(width){
-            const baseline = Number(getComputedStyle(document.documentElement).getPropertyValue('--track-baseline')) || 150;
-            let path = `M 0 ${baseline}`;
-            for(let x=0;x<=width;x+=8){
-                const longWave = Math.sin(x * 0.0016) * 110;
-                const midWave = Math.sin(x * 0.0065) * 40;
-                const shortWave = Math.cos(x * 0.018) * 12;
-                const mod = Math.sin(x * 0.0038) * Math.sin(x * 0.0008) * 6;
-                const y = baseline + longWave + midWave + shortWave + mod;
-                path += ` L ${Math.round(x)} ${Math.round(y)}`;
-            }
-            return path;
         }
 
         // ============================================
@@ -531,13 +446,6 @@
                 eventsContainer.appendChild(yearSection);
             });
 
-            const totalWidth = Math.max(eventsContainer.scrollWidth + window.innerWidth * 0.6, window.innerWidth * 2);
-            trackSvg.setAttribute('width', totalWidth);
-            trackSvg.style.width = totalWidth + 'px';
-            const wavyPath = generateWavyPath(totalWidth);
-            trackGlowPath.setAttribute('d', wavyPath);
-            trackMainPath.setAttribute('d', wavyPath);
-
             // lightbox bind
             document.querySelectorAll('.image-item').forEach(item=>{
                 item.addEventListener('click', ()=>{
@@ -548,17 +456,6 @@
                 });
             });
 
-            // set dash arrays when ready
-            setTimeout(()=>{
-                try{
-                    const pathLength = trackMainPath.getTotalLength();
-                    trackGlowPath.style.strokeDasharray = pathLength;
-                    trackGlowPath.style.strokeDashoffset = pathLength;
-                    trackMainPath.style.strokeDasharray = pathLength;
-                    trackMainPath.style.strokeDashoffset = pathLength;
-                }catch(e){}
-            },150);
-
             setTimeout(checkCardVisibility,120);
         }
 
@@ -568,13 +465,12 @@
         function lerp(a,b,t){ return a + (b - a) * t; }
 
         // ============================================
-        // Smooth progress / train inertia globals
+        // Smooth progress globals
         // ============================================
         let targetProgress = 0;   // set on scroll
         let displayProgress = 0;  // smoothed
-        let trainState = { targetLen:0, displayedLen:0, targetAngle:0, displayedAngle:0 };
 
-        // main RAF loop that applies smoothed progress to horizontal scroll, track draw, train movement
+        // main RAF loop that applies smoothed progress to horizontal scroll and other UI updates
         function mainRAF(){
             // smooth displayProgress toward targetProgress
             displayProgress = lerp(displayProgress, targetProgress, 0.12); // lower = more smoothing/lag
@@ -585,44 +481,6 @@
 
             // apply horizontal translate smoothly
             horizontalContent.style.transform = `translateX(-${scrollX}px)`;
-
-            // track draw based on displayProgress (smooth)
-            try{
-                const pathLength = trackMainPath.getTotalLength();
-                const drawLen = pathLength * displayProgress;
-                const currentOffset = Math.max(0, pathLength - drawLen);
-                trackGlowPath.style.strokeDashoffset = currentOffset;
-                trackMainPath.style.strokeDashoffset = currentOffset;
-
-                // set train target len
-                trainState.targetLen = Math.min(drawLen, pathLength - 1);
-
-                // train inertia for length
-                trainState.displayedLen = lerp(trainState.displayedLen || 0, trainState.targetLen, 0.14);
-
-                // compute p and next points
-                const p = trackMainPath.getPointAtLength(Math.max(0, Math.min(trainState.displayedLen, pathLength - 1)));
-                const ahead = trackMainPath.getPointAtLength(Math.max(0, Math.min(trainState.displayedLen + 8, pathLength - 1)));
-                const angleRad = Math.atan2(ahead.y - p.y, ahead.x - p.x);
-                const angleDeg = angleRad * 180 / Math.PI;
-
-                // small overshoot based on difference between target and displayed (gives inertia on turns)
-                const vel = trainState.targetLen - trainState.displayedLen;
-                trainState.targetAngle = angleDeg + Math.sign(vel) * Math.min(8, Math.abs(vel) * 0.06);
-                trainState.displayedAngle = lerp(trainState.displayedAngle || angleDeg, trainState.targetAngle, 0.14);
-
-                // compute top offset relative to baseline and apply train-offset tweak
-                const baseline = Number(getComputedStyle(document.documentElement).getPropertyValue('--track-baseline')) || 150;
-                const trainOffset = Number(getComputedStyle(document.documentElement).getPropertyValue('--train-offset')) || 18;
-                const leftPos = p.x;
-                const topOffset = p.y - baseline - trainOffset;
-
-                // set transform with rotation (train-svg already at 0°)
-                trainContainer.style.transform = `translate(${leftPos}px, calc(-50% + ${topOffset}px)) rotate(${trainState.displayedAngle}deg)`;
-
-            }catch(e){
-                // path not ready
-            }
 
             // active year update
             const years = [2024,2023,2022,2021];
@@ -777,10 +635,8 @@
             }
         });
 
-        // start main loop (smooth scroll, draw, train)
+        // start main loop (smooth scroll)
         requestAnimationFrame(mainRAF);
-
-        // start train raf loop is merged into mainRAF, so no separate animateTrainLoop
 
         // initial layout pass
         setTimeout(()=>{

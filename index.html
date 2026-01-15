@@ -16,6 +16,8 @@
   <!-- AOS for scroll animations -->
   <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
+  
+
   <!-- Local CSS (split files) -->
   <link rel="stylesheet" href="assets/css/base.css">
   <link rel="stylesheet" href="assets/css/hero.css">
@@ -49,34 +51,438 @@
   </div>
 </div>
 
-<!-- ===== NAVBAR ===== -->
-<nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
-  <div class="container">
-    <a class="navbar-brand d-flex align-items-center" href="#home">
-      <div class="logo"><img src="https://ptsnsuniversity.ac.in/PTSNS%20VISHWAVIDYALAYA_files/Logo-BOc_iZYA.png" alt="Logo"></div>
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="mainNav">
-      <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-        <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
-        <li class="nav-item"><a class="nav-link" href="#courses">Courses</a></li>
-        <li class="nav-item"><a class="nav-link" href="#events">Events</a></li>
-        <li class="nav-item"><a class="nav-link" href="#faculty">Faculty</a></li>
-        <li class="nav-item"><a class="nav-link" href="#blog">Blog</a></li>
-        <li class="nav-item"><a class="nav-link" href="innoverse.html">Innovations</a></li>
-        <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-        <li class="nav-item"><a class="nav-link" href="cosmoSphere.html">CosmoSphere</a></li>
-      </ul>
-      <div class="d-flex align-items-center">
-        <a href="#apply" class="btn btn-primary-cta me-2">Apply Now</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ===== COPY-PASTE: Fixed Turmeric Navbar + Hanging Basket + Far-spreading Particles ===== -->
+<style>
+  /* ---------- Layout & base ---------- */
+  .turmeric-nav-wrap { position: relative; z-index: 1200; }
+  .turmeric-navbar {
+    background: #ffffff;
+    box-shadow: 0 6px 20px rgba(12,12,12,0.06);
+    padding: 0.35rem 0;
+  }
+  .turmeric-navbar .container { position: relative; }
+
+  /* ---------- Logo on far left with 10-20px margin ---------- */
+  .navbar-brand.logo-left { margin-left: 12px; display:flex; align-items:center; gap:.6rem; }
+  .navbar-brand.logo-left .logo-img {
+    width:56px; height:56px; display:block; border-radius:8px; overflow:hidden;
+    background:#fff; padding:4px; box-shadow: 0 8px 20px rgba(6,12,10,0.05);
+  }
+  .navbar-brand.logo-left .logo-img img { width:100%; height:100%; object-fit:contain; display:block; }
+
+  /* ---------- Nav links keep original look but with subtle hover ---------- */
+  .navbar .nav-link { color:#243737; font-weight:600; padding:.5rem .75rem; border-radius:8px; transition:all .15s ease; }
+  .navbar .nav-link:hover, .navbar .nav-link:focus {
+    color:#fff; background: linear-gradient(90deg,#b66b12,#2f7a3e); transform:translateY(-3px);
+    box-shadow: 0 10px 26px rgba(46,125,64,0.1);
+    outline: none;
+  }
+
+  /* CTA */
+  .btn-primary-cta {
+    background: linear-gradient(90deg,#2f7a3e,#a85b14);
+    color:#fff; border-radius:10px; padding:.42rem .9rem; font-weight:800; border:none;
+    box-shadow: 0 10px 28px rgba(46,125,64,0.12);
+  }
+
+  /* ---------- Hanging basket cutout - raised higher so it overlaps nicely ---------- */
+  .basket-cutout-wrap {
+    position: absolute;
+    left: 14px;                       /* 10-20px margin from page left */
+    top: calc(100% - 70px);           /* raised more so couple sits higher */
+    width: 200px;                     /* size; change to match your PNG */
+    z-index: 1250;
+    pointer-events: none;             /* by default let clicks pass (except image itself) */
+    will-change: transform;
+  }
+  .basket-cutout {
+    width: 200px; height:auto; display:block;
+    user-select:none; -webkit-user-drag:none;
+    pointer-events: auto; cursor:pointer;
+    transform-origin: center top;
+    filter: drop-shadow(0 22px 48px rgba(8,12,10,0.12));
+  }
+
+  /* ---------- Large particle canvas (expanded so particles spread far) ---------- */
+  #turmericCanvas {
+    position:absolute;
+    left: -220px;        /* expand left so particles can spread out */
+    top: 50px;          /* start lower so powder looks like dropping out */
+    width: 900px;        /* CSS size will be recalculated by script for DPR */
+    height: 620px;
+    pointer-events:none;
+    z-index:1248;
+    filter: blur(0.2px) saturate(1.04);
+  }
+
+  /* subtle tint / ember below nav */
+  .turmeric-ember {
+    position:absolute; left:18px; top: calc(100% + 6px);
+    width: 160px; height:8px; border-radius:999px;
+    background: radial-gradient(closest-side, rgba(209,133,29,0.12), rgba(209,133,29,0.02));
+    z-index:1247; pointer-events:none;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 1000px) {
+    .basket-cutout-wrap { width:150px; top: calc(100% - 58px); left: 12px; }
+    .basket-cutout{ width:150px; }
+    #turmericCanvas { top:84px; left:-160px; width:640px; height:480px; }
+  }
+  @media (max-width: 560px) {
+    .basket-cutout-wrap { display:none; } /* hide on tiny screens */
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .basket-cutout { transition: none; }
+  }
+  
+
+
+
+
+
+
+  /* stronger z-index for nav so it stays above basket when stuck */
+.turmeric-navbar { z-index: 1360; position: sticky; top: 0; }
+
+/* transition on basket so it moves away smoothly when nav is stuck */
+.basket-cutout-wrap {
+  transition: transform .32s cubic-bezier(.2,.9,.2,1), opacity .28s ease;
+  will-change: transform, opacity;
+}
+
+/* when nav is stuck we move the basket downward and fade it slightly so it doesn't overlap */
+.turmeric-nav-wrap.stuck .basket-cutout-wrap {
+  transform: translateY(62px) scale(.98); /* move basket down and slightly scale */
+  opacity: 0.0; /* fade it out when stuck; change to 0.6 if you prefer it visible */
+  pointer-events: none;
+}
+
+/* optionally, you can keep a subtle mini-basket visible instead of hiding:
+.turmeric-nav-wrap.stuck .basket-cutout-wrap { transform: translateY(40px) scale(.86); opacity: .45; }
+*/
+
+</style>
+
+<!-- ===== NAVBAR (keeps your original bootstrap classes & collapse id) ===== -->
+<header class="turmeric-nav-wrap" >
+  <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top" role="navigation" aria-label="Main navigation">
+    <div class="container">
+
+      <!-- Logo (far left, 10-20px margin) -->
+      <a class="navbar-brand logo-left" href="#home" aria-label="PTSNS University home">
+        <div class="logo-img">
+          <img src="https://ptsnsuniversity.ac.in/PTSNS%20VISHWAVIDYALAYA_files/Logo-BOc_iZYA.png" alt="PTSNS logo">
+        </div>
+      </a>
+
+      <!-- toggler (Bootstrap) -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- ORIGINAL links block preserved and centered (Home included in list as first item) -->
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+          <li class="nav-item"><a class="nav-link" href="#courses">Courses</a></li>
+          <li class="nav-item"><a class="nav-link" href="#events">Events</a></li>
+          <li class="nav-item"><a class="nav-link" href="#faculty">Faculty</a></li>
+          <li class="nav-item"><a class="nav-link" href="#blog">Blog</a></li>
+          <li class="nav-item"><a class="nav-link" href="innoverse.html">Our Innovations</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="cosmoSphere.html">CosmoSphere</a></li>
+        </ul>
+
+        <div class="d-flex align-items-center">
+          <a href="#apply" class="btn btn-primary-cta me-2">Apply Now</a>
+        </div>
       </div>
     </div>
+  </nav>
+
+  <!-- ---------- Hanging basket + BIG particle canvas (replace image path with your local cutout) ---------- -->
+  <div class="basket-cutout-wrap" aria-hidden="false" style="left:14px;">
+    <img id="basketCutout" class="basket-cutout" src="assets/icons/couple-basket-cutout.png" alt="Basket with turmeric (click for effect)" tabindex="0">
+
+    <!-- Large canvas so particles travel farther and deeper -->
+    <canvas id="turmericCanvas" aria-hidden="true"></canvas>
+
+    <div class="turmeric-ember" aria-hidden="true"></div>
   </div>
-</nav>
+
+  
+</header>
+
+<script>
+/* Improved particle system: larger spread, longer life, moved emission point lower */
+(function(){
+  const basket = document.getElementById('basketCutout');
+  const canvas = document.getElementById('turmericCanvas');
+  if(!basket || !canvas) return;
+  const ctx = canvas.getContext('2d', { alpha: true });
+
+  // images for image-particles (replace with your files)
+  const imgSrcs = ['assets/icons/turmeric1.png','assets/icons/turmeric2.png'];
+  const imgs = []; let imgsLoaded = 0;
+  imgSrcs.forEach(s=>{
+    const im = new Image(); im.src = s;
+    im.onload = ()=> { imgsLoaded++; };
+    im.onerror = ()=> { /* fallback to dots */ };
+    imgs.push(im);
+  });
+
+  // sizing: make canvas wider & taller than wrapper so particles don't clip
+  function initSizing(){
+    const wrap = canvas.parentElement.getBoundingClientRect();
+    // expand horizontally and vertically for a roomy particle field
+    const extraW = Math.min(window.innerWidth * 0.25, 520);
+    const cw = Math.max(420, wrap.width + extraW);
+    const ch = Math.max(380, 420); // tall
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    canvas.style.width = cw + 'px';
+    canvas.style.left = (-Math.round(extraW/2)) + 'px'; // center offset so particles can spread left+right
+    canvas.style.top = Math.max(56, (wrap.top || 84)) + 'px';
+    canvas.style.height = ch + 'px';
+    canvas.width = Math.round(cw * dpr);
+    canvas.height = Math.round(ch * dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  setTimeout(initSizing,80);
+  window.addEventListener('resize', initSizing);
+
+  // particle state
+  const particles = [];
+  const maxParticles = 700;   // more particles but prune aggressively
+  const gravity = 0.18;       // stronger gravity so they fall convincingly
+  const air = 0.993;
+  let lastTime = performance.now();
+  let spawnAcc = 0;
+  let emitting = true;
+  let burstUntil = 0;
+
+  // emitter slightly lower than basket mouth (user asked to shift emitter down)
+  function emitterPos(){
+    const b = basket.getBoundingClientRect();
+    const c = canvas.getBoundingClientRect();
+    // reduce horizontal clipping risk by referencing the wider canvas
+    const x = (b.left + b.width * 0.6) - c.left + 4; // slight right shift
+    // moved lower so powder leaves basket and has some hang time before falling
+    const y = (b.top + b.height * 0.66) - c.top + 6;
+    return { x, y };
+  }
+
+  function spawn({x,y,burst=false}){
+    if(particles.length > maxParticles) return;
+    const useImage = imgsLoaded === imgSrcs.length && Math.random() < 0.36; // more image particles
+    if(useImage){
+      const img = imgs[Math.floor(Math.random()*imgs.length)];
+      const size = 22 + Math.random()*36; // bigger image particles
+      const vx = (Math.random()*2 -1)*1.1 + (burst ? (Math.random()*2 -1)*1.6 : 0);
+      const vy = -1.4 - Math.random()*1.8 + (burst ? -Math.random()*1.6 : 0);
+      const rot = Math.random()*Math.PI*2;
+      const vrot = (Math.random()*0.12 - 0.06);
+      const life = 1600 + Math.random()*1700; // longer life
+      particles.push({ type:'img', x, y, vx, vy, size, img, rot, vrot, born: performance.now(), life, alpha:1 });
+    } else {
+      const angle = (-90 + (Math.random()*80 - 40)) * Math.PI/180;
+      const speed = (burst ? 3.2 + Math.random()*1.8 : 0.9 + Math.random()*1.2);
+      const vx = Math.cos(angle)*speed + (Math.random()*0.8 - 0.4);
+      const vy = Math.sin(angle)*speed + (Math.random()*0.3 - 0.1);
+      const size = (burst ? 5 + Math.random()*4 : 2.2 + Math.random()*2.2);
+      const life = 1100 + Math.random()*1500; // longer
+      const colors = ['rgba(255,205,92,1)','rgba(255,170,40,1)','rgba(217,115,26,1)','rgba(234,94,22,1)'];
+      const color = colors[Math.floor(Math.random()*colors.length)];
+      particles.push({ type:'dot', x, y, vx, vy, size, color, born: performance.now(), life, alpha:1 });
+    }
+  }
+
+  function update(dt){
+    // spawn baseline: more particles so spread appears fuller
+    spawnAcc += dt;
+    const baseRate = emitting ? 0.016 : 0; // ~16 particles/sec baseline by accumulation
+    const spawnCount = Math.floor(spawnAcc * baseRate);
+    if(spawnCount > 0){
+      spawnAcc -= spawnCount/baseRate;
+      const pos = emitterPos();
+      for(let i=0;i<spawnCount;i++){
+        spawn({ x: pos.x + (Math.random()-0.5)*28, y: pos.y + (Math.random()-0.5)*14, burst:false });
+      }
+    }
+    // burst spawn for hover/click
+    if(performance.now() < burstUntil){
+      const pos = emitterPos();
+      for(let i=0;i<12;i++){
+        spawn({ x: pos.x + (Math.random()-0.5)*38, y: pos.y + (Math.random()-0.5)*18, burst:true });
+      }
+    }
+
+    // integrate + prune
+    for(let i = particles.length - 1; i >= 0; i--){
+      const p = particles[i];
+      p.vy += gravity * (dt/16.6);
+      p.vx *= air;
+      p.vy *= air;
+      p.x += p.vx * (dt/16.6) * 2.0;
+      p.y += p.vy * (dt/16.6) * 2.0;
+      if(p.type === 'img') p.rot += p.vrot * (dt/16.6);
+      const age = performance.now() - p.born;
+      p.alpha = Math.max(0, 1 - age / p.life);
+      // allow a longer fall distance before removal (canvas height + extra)
+      if(age > p.life || p.y > canvas.height + 300 || p.x < -300 || p.x > canvas.width + 300){
+        particles.splice(i,1);
+      }
+    }
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    for(const p of particles){
+      if(p.type === 'dot'){
+        ctx.save();
+        ctx.globalAlpha = 0.92 * p.alpha;
+        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size*2);
+        g.addColorStop(0, p.color);
+        g.addColorStop(0.6, p.color.replace(/1\)$/, '0.55)'));
+        g.addColorStop(1, p.color.replace(/1\)$/, '0)'));
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+        ctx.fill();
+        ctx.restore();
+      } else if(p.type === 'img'){
+        ctx.save();
+        ctx.globalAlpha = 0.96 * p.alpha;
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        const w = p.size; const h = p.size;
+        try {
+          ctx.drawImage(p.img, -w/2, -h/2, w, h);
+        } catch(e){
+          ctx.fillStyle='rgba(220,120,30,0.9)';
+          ctx.beginPath(); ctx.arc(0,0,w/2,0,Math.PI*2); ctx.fill();
+        }
+        ctx.restore();
+      }
+    }
+  }
+
+  
+  // main loop
+  let last = performance.now();
+  function step(now){
+    const dt = Math.min(50, now - last);
+    last = now;
+    update(dt);
+    draw();
+    requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+
+  // burst trigger (hover / focus / click)
+  function triggerBurst(){
+    burstUntil = performance.now() + 20;
+    const prev = emitting;
+    emitting = true;
+    setTimeout(()=> { emitting = prev; }, 900);
+  }
+  basket.addEventListener('mouseenter', ()=> triggerBurst());
+  basket.addEventListener('focus', ()=> triggerBurst());
+  basket.addEventListener('click', (e)=> { e.preventDefault(); triggerBurst(); });
+
+  // initial sizing + keep resizing on window
+  function init(){
+    initSizing();
+    // small extra call once images loaded may change emitter offsets
+    setTimeout(initSizing, 220);
+  }
+  function initSizing(){
+    const wrap = canvas.parentElement.getBoundingClientRect();
+    const extraW = Math.min(window.innerWidth * 0.28, 680);
+    const cw = Math.max(520, wrap.width + extraW);
+    const ch = Math.max(420, 420);
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    canvas.style.width = cw + 'px';
+    canvas.style.left = (-Math.round(extraW/2)) + 'px';
+    canvas.style.height = ch + 'px';
+    canvas.width = Math.round(cw * dpr);
+    canvas.height = Math.round(ch * dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  setTimeout(init, 100);
+  window.addEventListener('resize', ()=> { initSizing(); });
+
+  // keyboard toggle for dev
+  window.addEventListener('keydown', (e)=> { if(e.key === 'b' || e.key === 'B') emitting = !emitting; });
+
+  // reduced motion respect
+  const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if(mq.matches){ particles.length = 0; emitting = false; }
+})();
+
+
+/* stick-detection: toggle .stuck on wrapper when navbar reaches top */
+(function(){
+  const wrap = document.querySelector('.turmeric-nav-wrap');
+  const nav = wrap ? wrap.querySelector('.turmeric-navbar, .navbar') : null;
+  if(!wrap || !nav) return;
+
+  // measure once then on scroll
+  function updateStuck() {
+    const rect = nav.getBoundingClientRect();
+    // when nav top is at or above viewport top -> stuck
+    if (rect.top <= 0) wrap.classList.add('stuck');
+    else wrap.classList.remove('stuck');
+  }
+
+  // run on scroll + resize + initial load
+  window.addEventListener('scroll', updateStuck, {passive:true});
+  window.addEventListener('resize', updateStuck);
+  document.addEventListener('DOMContentLoaded', updateStuck);
+  updateStuck();
+})();
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <!-- ===== HERO / MAIN LANDING (FINAL) ===== -->
 <section id="home" class="hero final-hero" aria-label="Main landing hero">
@@ -391,7 +797,7 @@
 <!-- ===== COSMOSPHERE ACADEMIC NETWORK PROMO ===== -->
 <section class="py-5 text-center" style="background:#050812;color:#fff;">
   <div class="container">
-    <h2>CosmoSphere</h2>
+    <h2>PTSNSU Think Tank</h2>
     <p class="mb-3">
       A moderated academic social network for professors and students.
     </p>
@@ -1008,7 +1414,7 @@
     <div class="row">
       <div class="col-md-4 mb-3">
         <h5>Your College</h5>
-        <p class="small">Short about text. Replace with mission, accreditations, and social links.</p>
+        <p class="small">Our state-of-the-art infrastructure is designed to support academic excellence, research innovation, and holistic student development.</p>
       </div>
       <div class="col-md-2 mb-3">
         <h6>Links</h6>
@@ -1016,7 +1422,9 @@
           <li><a href="#home">Home</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#courses">Courses</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="#events">Events</a></li>
+          <li><a href="cosmoSphere.html">Cosmosphere</a></li>
+          <li><a href="innoverse.html">Our Innovations</a></li>
         </ul>
       </div>
       <div class="col-md-3 mb-3">
@@ -1028,7 +1436,7 @@
         <p class="small">+91 12345 67890<br>info@college.edu</p>
       </div>
     </div>
-    <div class="text-center mt-3 small">&copy; 2026 Your College. All rights reserved.</div>
+    <div class="text-center mt-3 small">&copy; 2026 PTSNS University. All rights reserved.</div>
     <div class="text-center mt-3 small">Created by Aditya Barman</div>
   </div>
 </footer>

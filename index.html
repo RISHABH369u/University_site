@@ -58,15 +58,6 @@
 
 
 
-
-
-
-
-
-
-
-
-<!-- ===== COPY-PASTE: Fixed Turmeric Navbar + Hanging Basket + Far-spreading Particles ===== -->
 <style>
   /* ---------- Layout & base ---------- */
   .turmeric-nav-wrap { position: relative; z-index: 1200; }
@@ -100,7 +91,7 @@
     box-shadow: 0 10px 28px rgba(46,125,64,0.12);
   }
 
-  /* ---------- Hanging basket cutout - raised higher so it overlaps nicely ---------- */
+
   .basket-cutout-wrap {
     position: absolute;
     left: 14px;                       /* 10-20px margin from page left */
@@ -200,7 +191,7 @@
       <div class="collapse navbar-collapse" id="mainNav">
         <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
           <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about-university">About</a></li>
           <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
           <li class="nav-item"><a class="nav-link" href="#courses">Courses</a></li>
           <li class="nav-item"><a class="nav-link" href="#events">Events</a></li>
@@ -229,216 +220,10 @@
   </div>
 
   
-</header>
+</header> 
 
-<script>
-/* Improved particle system: larger spread, longer life, moved emission point lower */
-(function(){
-  const basket = document.getElementById('basketCutout');
-  const canvas = document.getElementById('turmericCanvas');
-  if(!basket || !canvas) return;
-  const ctx = canvas.getContext('2d', { alpha: true });
+<script>   /* stick-detection: toggle .stuck on wrapper when navbar reaches top */
 
-  // images for image-particles (replace with your files)
-  const imgSrcs = ['assets/icons/turmeric1.png','assets/icons/turmeric2.png'];
-  const imgs = []; let imgsLoaded = 0;
-  imgSrcs.forEach(s=>{
-    const im = new Image(); im.src = s;
-    im.onload = ()=> { imgsLoaded++; };
-    im.onerror = ()=> { /* fallback to dots */ };
-    imgs.push(im);
-  });
-
-  // sizing: make canvas wider & taller than wrapper so particles don't clip
-  function initSizing(){
-    const wrap = canvas.parentElement.getBoundingClientRect();
-    // expand horizontally and vertically for a roomy particle field
-    const extraW = Math.min(window.innerWidth * 0.25, 520);
-    const cw = Math.max(420, wrap.width + extraW);
-    const ch = Math.max(380, 420); // tall
-    const dpr = Math.max(1, window.devicePixelRatio || 1);
-    canvas.style.width = cw + 'px';
-    canvas.style.left = (-Math.round(extraW/2)) + 'px'; // center offset so particles can spread left+right
-    canvas.style.top = Math.max(56, (wrap.top || 84)) + 'px';
-    canvas.style.height = ch + 'px';
-    canvas.width = Math.round(cw * dpr);
-    canvas.height = Math.round(ch * dpr);
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-  }
-  setTimeout(initSizing,80);
-  window.addEventListener('resize', initSizing);
-
-  // particle state
-  const particles = [];
-  const maxParticles = 700;   // more particles but prune aggressively
-  const gravity = 0.18;       // stronger gravity so they fall convincingly
-  const air = 0.993;
-  let lastTime = performance.now();
-  let spawnAcc = 0;
-  let emitting = true;
-  let burstUntil = 0;
-
-  // emitter slightly lower than basket mouth (user asked to shift emitter down)
-  function emitterPos(){
-    const b = basket.getBoundingClientRect();
-    const c = canvas.getBoundingClientRect();
-    // reduce horizontal clipping risk by referencing the wider canvas
-    const x = (b.left + b.width * 0.6) - c.left + 4; // slight right shift
-    // moved lower so powder leaves basket and has some hang time before falling
-    const y = (b.top + b.height * 0.66) - c.top + 6;
-    return { x, y };
-  }
-
-  function spawn({x,y,burst=false}){
-    if(particles.length > maxParticles) return;
-    const useImage = imgsLoaded === imgSrcs.length && Math.random() < 0.36; // more image particles
-    if(useImage){
-      const img = imgs[Math.floor(Math.random()*imgs.length)];
-      const size = 22 + Math.random()*36; // bigger image particles
-      const vx = (Math.random()*2 -1)*1.1 + (burst ? (Math.random()*2 -1)*1.6 : 0);
-      const vy = -1.4 - Math.random()*1.8 + (burst ? -Math.random()*1.6 : 0);
-      const rot = Math.random()*Math.PI*2;
-      const vrot = (Math.random()*0.12 - 0.06);
-      const life = 1600 + Math.random()*1700; // longer life
-      particles.push({ type:'img', x, y, vx, vy, size, img, rot, vrot, born: performance.now(), life, alpha:1 });
-    } else {
-      const angle = (-90 + (Math.random()*80 - 40)) * Math.PI/180;
-      const speed = (burst ? 3.2 + Math.random()*1.8 : 0.9 + Math.random()*1.2);
-      const vx = Math.cos(angle)*speed + (Math.random()*0.8 - 0.4);
-      const vy = Math.sin(angle)*speed + (Math.random()*0.3 - 0.1);
-      const size = (burst ? 5 + Math.random()*4 : 2.2 + Math.random()*2.2);
-      const life = 1100 + Math.random()*1500; // longer
-      const colors = ['rgba(255,205,92,1)','rgba(255,170,40,1)','rgba(217,115,26,1)','rgba(234,94,22,1)'];
-      const color = colors[Math.floor(Math.random()*colors.length)];
-      particles.push({ type:'dot', x, y, vx, vy, size, color, born: performance.now(), life, alpha:1 });
-    }
-  }
-
-  function update(dt){
-    // spawn baseline: more particles so spread appears fuller
-    spawnAcc += dt;
-    const baseRate = emitting ? 0.016 : 0; // ~16 particles/sec baseline by accumulation
-    const spawnCount = Math.floor(spawnAcc * baseRate);
-    if(spawnCount > 0){
-      spawnAcc -= spawnCount/baseRate;
-      const pos = emitterPos();
-      for(let i=0;i<spawnCount;i++){
-        spawn({ x: pos.x + (Math.random()-0.5)*28, y: pos.y + (Math.random()-0.5)*14, burst:false });
-      }
-    }
-    // burst spawn for hover/click
-    if(performance.now() < burstUntil){
-      const pos = emitterPos();
-      for(let i=0;i<12;i++){
-        spawn({ x: pos.x + (Math.random()-0.5)*38, y: pos.y + (Math.random()-0.5)*18, burst:true });
-      }
-    }
-
-    // integrate + prune
-    for(let i = particles.length - 1; i >= 0; i--){
-      const p = particles[i];
-      p.vy += gravity * (dt/16.6);
-      p.vx *= air;
-      p.vy *= air;
-      p.x += p.vx * (dt/16.6) * 2.0;
-      p.y += p.vy * (dt/16.6) * 2.0;
-      if(p.type === 'img') p.rot += p.vrot * (dt/16.6);
-      const age = performance.now() - p.born;
-      p.alpha = Math.max(0, 1 - age / p.life);
-      // allow a longer fall distance before removal (canvas height + extra)
-      if(age > p.life || p.y > canvas.height + 300 || p.x < -300 || p.x > canvas.width + 300){
-        particles.splice(i,1);
-      }
-    }
-  }
-
-  function draw(){
-    ctx.clearRect(0,0,canvas.width, canvas.height);
-    for(const p of particles){
-      if(p.type === 'dot'){
-        ctx.save();
-        ctx.globalAlpha = 0.92 * p.alpha;
-        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size*2);
-        g.addColorStop(0, p.color);
-        g.addColorStop(0.6, p.color.replace(/1\)$/, '0.55)'));
-        g.addColorStop(1, p.color.replace(/1\)$/, '0)'));
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
-        ctx.fill();
-        ctx.restore();
-      } else if(p.type === 'img'){
-        ctx.save();
-        ctx.globalAlpha = 0.96 * p.alpha;
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.rot);
-        const w = p.size; const h = p.size;
-        try {
-          ctx.drawImage(p.img, -w/2, -h/2, w, h);
-        } catch(e){
-          ctx.fillStyle='rgba(220,120,30,0.9)';
-          ctx.beginPath(); ctx.arc(0,0,w/2,0,Math.PI*2); ctx.fill();
-        }
-        ctx.restore();
-      }
-    }
-  }
-
-  
-  // main loop
-  let last = performance.now();
-  function step(now){
-    const dt = Math.min(50, now - last);
-    last = now;
-    update(dt);
-    draw();
-    requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
-
-  // burst trigger (hover / focus / click)
-  function triggerBurst(){
-    burstUntil = performance.now() + 20;
-    const prev = emitting;
-    emitting = true;
-    setTimeout(()=> { emitting = prev; }, 900);
-  }
-  basket.addEventListener('mouseenter', ()=> triggerBurst());
-  basket.addEventListener('focus', ()=> triggerBurst());
-  basket.addEventListener('click', (e)=> { e.preventDefault(); triggerBurst(); });
-
-  // initial sizing + keep resizing on window
-  function init(){
-    initSizing();
-    // small extra call once images loaded may change emitter offsets
-    setTimeout(initSizing, 220);
-  }
-  function initSizing(){
-    const wrap = canvas.parentElement.getBoundingClientRect();
-    const extraW = Math.min(window.innerWidth * 0.28, 680);
-    const cw = Math.max(520, wrap.width + extraW);
-    const ch = Math.max(420, 420);
-    const dpr = Math.max(1, window.devicePixelRatio || 1);
-    canvas.style.width = cw + 'px';
-    canvas.style.left = (-Math.round(extraW/2)) + 'px';
-    canvas.style.height = ch + 'px';
-    canvas.width = Math.round(cw * dpr);
-    canvas.height = Math.round(ch * dpr);
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-  }
-  setTimeout(init, 100);
-  window.addEventListener('resize', ()=> { initSizing(); });
-
-  // keyboard toggle for dev
-  window.addEventListener('keydown', (e)=> { if(e.key === 'b' || e.key === 'B') emitting = !emitting; });
-
-  // reduced motion respect
-  const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-  if(mq.matches){ particles.length = 0; emitting = false; }
-})();
-
-
-/* stick-detection: toggle .stuck on wrapper when navbar reaches top */
 (function(){
   const wrap = document.querySelector('.turmeric-nav-wrap');
   const nav = wrap ? wrap.querySelector('.turmeric-navbar, .navbar') : null;
@@ -457,29 +242,7 @@
   window.addEventListener('resize', updateStuck);
   document.addEventListener('DOMContentLoaded', updateStuck);
   updateStuck();
-})();
-
-
-
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+})(); </script>
 
 
 
